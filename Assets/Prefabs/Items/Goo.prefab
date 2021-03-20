@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 4873707957689438299}
   - component: {fileID: 4716661374448005529}
   m_Layer: 0
-  m_Name: Apple
+  m_Name: Goo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

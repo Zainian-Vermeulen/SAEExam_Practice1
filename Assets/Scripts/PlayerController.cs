@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -17,6 +18,10 @@ public class PlayerController : MonoBehaviour
     Vector2 lookInput;
     float sprintInput;
 
+ 
+
+    public LayerMask layer;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -24,11 +29,16 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        if ((Input.GetKeyDown(KeyCode.E)) || (Input.GetKeyDown(KeyCode.JoystickButton16)) ||
+            (Input.GetKeyDown(KeyCode.JoystickButton18))) return;
+
+
+            moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         lookInput = new Vector2(Input.GetAxis("Mouse X"), -Input.GetAxis("Mouse Y"));
         sprintInput = Input.GetAxis("Sprint");
 
         UpdateFollowTargetRotation();
+        PickUpItem();
 
         float speed = 0;
 
@@ -67,8 +77,35 @@ public class PlayerController : MonoBehaviour
         {
             angles.x = 40;
         }
+
         followTransform.localEulerAngles = angles;
     }
 
+    void Update()
+    {
+        
+    }
 
+    void PickUpItem()
+    {
+        var ray = new Ray(this.transform.position, this.transform.forward);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, 100))
+        {
+            if (hit.transform.parent.gameObject)
+            {
+                if ((Input.GetKeyDown(KeyCode.E)) || (Input.GetKeyDown(KeyCode.JoystickButton16)) || (Input.GetKeyDown(KeyCode.JoystickButton18)))
+                {
+                    Debug.Log("destroying item: " + hit.collider.gameObject);
+                    hit.collider.gameObject.SetActive(false);
+                   animator.Play("PickUp");
+                }
+                
+            }
+        }
+    }
+
+    
 }
+
